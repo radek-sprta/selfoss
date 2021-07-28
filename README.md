@@ -19,6 +19,10 @@ The new multipurpose rss reader, live stream, mashup, aggregation web applicatio
 - **VERSION** = selfoss version
 - **SHA256_HASH** = SHA256 hash of selfoss archive
 
+### Runtime variables
+
+- SELFOSS_CONFIG_FILE = Custom config.ini location
+
 ### Ports
 
 - 8888
