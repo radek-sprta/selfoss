@@ -1,4 +1,4 @@
-# hardware/selfoss
+# rsprta/selfoss
 
 ![selfoss](https://i.imgur.com/8hJyBgk.png "selfoss")
 
@@ -38,7 +38,7 @@ The new multipurpose rss reader, live stream, mashup, aggregation web applicatio
 
 ```yml
 selfoss:
-  image: hardware/selfoss
+  image: rsprta/selfoss
   container_name: selfoss
   volumes:
     - /mnt/docker/selfoss:/selfoss/data
