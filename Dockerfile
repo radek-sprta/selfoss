@@ -13,11 +13,8 @@ ARG SHA256_HASH="0b3d46b0b25170f99e3e29c9fc6a2e5235b0449fecbdad902583c919724aa6e
 
 ENV GID=991 UID=991 CRON_PERIOD=15m UPLOAD_MAX_SIZE=25M LOG_TO_STDOUT=false MEMORY_LIMIT=128M
 
-RUN apk -U upgrade \
- && apk add -t build-dependencies \
-    wget \
-    git \
- && apk add \
+RUN apk upgrade --no-cache \
+ && apk add --no-cache \
     musl \
     nginx \
     s6 \
@@ -49,8 +46,7 @@ RUN apk -U upgrade \
  && if [ "${CHECKSUM}" != "${SHA256_HASH}" ]; then echo "Warning! Checksum does not match!" && exit 1; fi \
  && mkdir /selfoss && unzip -q /tmp/selfoss-$VERSION.zip -d /selfoss \
  && sed -i -e 's/base_url=/base_url=\//g' /selfoss/defaults.ini \
- && apk del build-dependencies \
- && rm -rf /var/cache/apk/* /tmp/*
+ && rm -rf /tmp/*
 
 COPY rootfs /
 RUN chmod +x /usr/local/bin/run.sh /services/*/run /services/.s6-svscan/*
