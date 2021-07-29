@@ -25,7 +25,7 @@ A multipurpose RSS reader, live stream, mashup, aggregation web application.
 
 ### Runtime variables
 
-- SELFOSS_CONFIG_FILE = Custom config.ini location
+- **SELFOSS_CONFIG_FILE** = Custom config.ini location
 
 ### Ports
 
