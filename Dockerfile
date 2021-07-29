@@ -1,7 +1,12 @@
 FROM alpine:3.14
 
-LABEL description "Multipurpose rss reader, live stream, mashup, aggregation web application" \
-      maintainer="Hardware <contact@meshup.net>"
+LABEL maintainer="Radek Sprta <mail@radeksprta.eu>"
+LABEL org.opencontainers.image.authors="Radek Sprta <mail@radeksprta.eu>"
+LABEL org.opencontainers.image.description="Up-to-date Selfoss, a multipurpose RSS reader, live stream, mashup, aggregation web application. "
+LABEL org.opencontainers.image.documentation="https://gitlab.com/radek-sprta/docker-selfoss/-/blob/master/README.md"
+LABEL org.opencontainers.image.source="https://gitlab.com/radek-sprta/docker-selfoss"
+LABEL org.opencontainers.image.title="rsprta/selfoss"
+LABEL org.opencontainers.image.url="https://gitlab.com/radek-sprta/docker-selfoss"
 
 ARG VERSION=2.18
 ARG SHA256_HASH="0b3d46b0b25170f99e3e29c9fc6a2e5235b0449fecbdad902583c919724aa6ed"
