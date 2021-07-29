@@ -37,7 +37,6 @@ amd64:latest:
     - .docker-setup
   variables:
     PLATFORM: linux/amd64
-    VERSION: latest
 
 arm64:latest:
   extends:
@@ -45,7 +44,6 @@ arm64:latest:
     - .docker-setup
   variables:
     PLATFORM: linux/arm64
-    VERSION: latest
 
 arm/v7:latest:
   extends:
@@ -53,7 +51,6 @@ arm/v7:latest:
     - .docker-setup
   variables:
     PLATFORM: linux/arm/v7
-    VERSION: latest
 
 arm/v6:latest:
   extends:
@@ -61,7 +58,39 @@ arm/v6:latest:
     - .docker-setup
   variables:
     PLATFORM: linux/arm/v6
-    VERSION: latest
+
+# 2.18 tag
+amd64:2.18:
+  extends:
+    - .build
+    - .docker-setup
+  variables:
+    PLATFORM: linux/amd64
+    VERSION: "2.18"
+
+arm64:2.18:
+  extends:
+    - .build
+    - .docker-setup
+  variables:
+    PLATFORM: linux/arm64
+    VERSION: "2.18"
+
+arm/v7:2.18:
+  extends:
+    - .build
+    - .docker-setup
+  variables:
+    PLATFORM: linux/arm/v7
+    VERSION: "2.18"
+
+arm/v6:2.18:
+  extends:
+    - .build
+    - .docker-setup
+  variables:
+    PLATFORM: linux/arm/v6
+    VERSION: "2.18"
 
 .deploy:
   extends:
@@ -85,3 +114,9 @@ deploy:latest:
     - .deploy
   variables:
     VERSION: latest
+
+deploy:2.18:
+  extends:
+    - .deploy
+  variables:
+    VERSION: "2.18"
