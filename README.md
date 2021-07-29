@@ -25,7 +25,6 @@ A multipurpose RSS reader, live stream, mashup, aggregation web application.
 
 ### Runtime variables
 
-- **SELFOSS_CONFIG_FILE** = Custom config.ini location
 
 ### Ports
 
@@ -41,6 +40,7 @@ A multipurpose RSS reader, live stream, mashup, aggregation web application.
 | **UPLOAD_MAX_SIZE** | Attachment size limit | *optional* | 25M
 | **LOG_TO_STDOUT** | Enable nginx and php error logs to stdout | *optional* | false
 | **MEMORY_LIMIT** | PHP memory limit | *optional* | 128M
+| **SELFOSS_CONFIG_FILE** | Custom config.ini location | *optional* | /selfoss/defaults.ini
 
 ## Usage
 The simplest way to run the container is the following command:
