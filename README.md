@@ -63,7 +63,8 @@ services:
 ```
 
 ## Contact
-- [mail@radeksprta.eu](mailto:mail@radeksprta.eu)- [incoming+radek-sprta/docker-selfoss@gitlab.com](incoming+radek-sprta/docker-selfoss@gitlab.com)
+- [mail@radeksprta.eu](mailto:mail@radeksprta.eu)
+- [incoming+radek-sprta/docker-selfoss@gitlab.com](incoming+radek-sprta/docker-selfoss@gitlab.com)
 
 ## Credits
 The image is forked from [hardware/selfoss](https://github.com/hardware/selfoss).
