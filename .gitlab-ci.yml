@@ -41,6 +41,7 @@ deploy:
     - .matrix
   only:
     - master
+  retry: 1
   stage: deploy
   script:
     - just upload "${VERSION}" "${PLATFORM}"
