@@ -9,6 +9,8 @@ services:
 before_script:
   - apk --no-cache add git just 
 
+image: docker:git
+
 .matrix:
   parallel:
     matrix:
