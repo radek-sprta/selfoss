@@ -19,77 +19,46 @@ services:
     - export BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
     - export VCS_REF="$(git describe --tags --always --dirty)"
 
-.build:
+.matrix:
+  parallel:
+    matrix:
+      - PLATFORM:
+          - "linux/amd64"
+          - "linux/arm64"
+          - "linux/arm/v7"
+          - "linux/arm/v6"
+        VERSION:
+          - "2.18"
+          - "latest"
+
+build:
+  artifacts:
+    paths:
+      - .cache
+    expire_in: 1 hour
+  extends:
+    - .docker-setup
+    - .matrix
   stage: build
   script:
     - docker buildx build --build-arg version=${VERSION} --platform ${PLATFORM} --tag selfoss --cache-to "type=local,dest=.cache/${PLATFORM}/${VERSION}" --load .
     - docker run --rm -d --name selfoss selfoss
     - docker stop selfoss
-  artifacts:
-    paths:
-      - .cache
-    expire_in: 1 hour
 
-# 2.18 tag
-amd64:2.18:
-  extends:
-    - .build
-    - .docker-setup
-  variables:
-    PLATFORM: linux/amd64
-    VERSION: "2.18"
-
-arm64:2.18:
-  extends:
-    - .build
-    - .docker-setup
-  variables:
-    PLATFORM: linux/arm64
-    VERSION: "2.18"
-
-arm/v7:2.18:
-  extends:
-    - .build
-    - .docker-setup
-  variables:
-    PLATFORM: linux/arm/v7
-    VERSION: "2.18"
-
-arm/v6:2.18:
-  extends:
-    - .build
-    - .docker-setup
-  variables:
-    PLATFORM: linux/arm/v6
-    VERSION: "2.18"
-
-.deploy:
+deploy:
   extends:
     - .docker-setup
+    - .matrix
   stage: deploy
   script:
     - >
       docker buildx build . --push --platform linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
-      --cache-from "type=local,src=.cache/linux/amd64/${BUILD_VERSION}"
-      --cache-from "type=local,src=.cache/linux/arm64/${BUILD_VERSION}"
-      --cache-from "type=local,src=.cache/linux/arm/v7/${BUILD_VERSION}"
-      --cache-from "type=local,src=.cache/linux/arm/v6/${BUILD_VERSION}"
+      --cache-from "type=local,src=.cache/linux/amd64/${VERSION}"
+      --cache-from "type=local,src=.cache/linux/arm64/${VERSION}"
+      --cache-from "type=local,src=.cache/linux/arm/v7/${VERSION}"
+      --cache-from "type=local,src=.cache/linux/arm/v6/${VERSION}"
       --label "org.opencontainers.image.created=${BUILD_DATE}"
       --label "org.opencontainers.image.revision=${VCS_REF}"
-      --tag ${CI_REGISTRY_IMAGE}:${TAG_VERSION}
-      --tag ${DOCKERHUB_REPOSITORY}:${TAG_VERSION}
+      --tag ${CI_REGISTRY_IMAGE}:${VERSION}
+      --tag ${DOCKERHUB_REPOSITORY}:${VERSION}
     - docker run -v ${PWD}:/workspace -e DOCKERHUB_USERNAME -e DOCKERHUB_PASSWORD -e DOCKERHUB_REPOSITORY -e README_FILEPATH=/workspace/README.md peterevans/dockerhub-description
-
-deploy:latest:
-  extends:
-    - .deploy
-  variables:
-    BUILD_VERSION: "2.18"
-    TAG_VERSION: latest
-
-deploy:2.18:
-  extends:
-    - .deploy
-  variables:
-    BUILD_VERSION: "2.18"
-    TAG_VERSION: "2.18"
