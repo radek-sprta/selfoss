@@ -39,6 +39,8 @@ build:
 deploy:
   extends:
     - .matrix
+  only:
+    - master
   stage: deploy
   script:
     - just upload "${VERSION}" "${PLATFORM}"
