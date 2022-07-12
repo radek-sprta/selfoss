@@ -7,7 +7,7 @@ services:
     command: ["--experimental"]
 
 .docker-setup:
-  image: docker:stable-git
+  image: docker:git
   before_script:
     - mkdir -p ~/.docker/cli-plugins
     - wget https://github.com/docker/buildx/releases/download/v0.8.2/buildx-v0.8.2.linux-amd64 -O ~/.docker/cli-plugins/docker-buildx
