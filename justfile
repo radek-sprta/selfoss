@@ -2,8 +2,8 @@ set export
 set positional-arguments
 
 buildx-version := "0.8.2"
+name := "selfoss"
 plugins-dir := "~/.docker/cli-plugins"
-tag := "selfoss"
 
 BUILD_DATE := `date -u +'%Y-%m-%dT%H:%M:%SZ'`
 VCS_REF := `git describe --tags --always --dirty`
@@ -14,7 +14,7 @@ defaults:
 
 build version platform: _deps _qemu
     docker buildx create --use --driver docker-container --name builder
-    docker buildx build --build-arg version={{version}} --platform {{platform}} --tag {{tag}} --cache-to "type=local,dest=.cache/{{platform}}/{{version}}" --load .
+    docker buildx build --build-arg version={{version}} --platform {{platform}} --tag {{name}} --cache-to "type=local,dest=.cache/{{platform}}/{{version}}" --load .
     docker buildx rm builder
 
 _login:
@@ -33,10 +33,10 @@ _qemu:
     docker run --privileged multiarch/qemu-user-static --reset -p yes
 
 run:
-    docker run --rm -d --name {{tag}} {{tag}}
+    docker run --rm -d --name {{name}} {{name}}
 
 test: (build "latest" "linux/amd64") run
-    docker stop {{tag}}
+    docker stop {{name}}
 
 upload version platform: _login
     docker buildx build . --push --platform {{platform}} \
