@@ -33,6 +33,7 @@ build:
   stage: build
   script:
     - just build "${VERSION}" "${PLATFORM}"
+    - just run
     - docker stop selfoss
 
 deploy:
