@@ -1,4 +1,4 @@
-FROM alpine:3.14
+FROM alpine:3.16
 
 LABEL maintainer="Radek Sprta <mail@radeksprta.eu>"
 LABEL org.opencontainers.image.authors="Radek Sprta <mail@radeksprta.eu>"
