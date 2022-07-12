@@ -13,6 +13,8 @@ defaults:
     @just --list
 
 build version platform: _deps _qemu
+    # Populate image cache to speed up builds
+    docker pull --platform {{platform}} ${DOCKERHUB_REPOSITORY:-}:{{version}} || true
     docker buildx create --use --driver docker-container --name builder
     docker buildx build --build-arg version={{version}} --platform {{platform}} --tag {{name}} --cache-to "type=local,dest=.cache/{{platform}}/{{version}}" --load .
     docker buildx rm builder
