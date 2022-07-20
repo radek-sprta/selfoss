@@ -10,8 +10,8 @@ password := env_var_or_default("DOCKERHUB_PASSWORD", "none")
 registry := "docker.io"
 repository := env_var_or_default("DOCKERHUB_REPOSITORY", "{{user}}/{{name}}")
 
-export BUILD_DATE := `date -u +'%Y-%m-%dT%H:%M:%SZ'`
-export VCS_REF := `git describe --tags --always --dirty`
+BUILD_DATE := `date -u +'%Y-%m-%dT%H:%M:%SZ'`
+VCS_REF := `git describe --tags --always --dirty`
 
 
 defaults:
