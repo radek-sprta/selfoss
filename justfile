@@ -35,6 +35,11 @@ _qemu:
 run:
     docker run --rm -d --name {{name}} {{name}}
 
+scan image:
+    trivy image --ignore-unfixed --severity MEDIUM,HIGH,CRITICAL \
+    --exit-code 1 --no-progress --security-checks vuln \
+    {{image}}
+
 test: (build "latest" "linux/amd64") run
     docker stop {{name}}
 
