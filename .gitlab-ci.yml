@@ -38,11 +38,12 @@ build:
     - docker stop selfoss
     # Upload internally for testing
     - >
-      just upload "${VERSION}" "${PLATFORM}"
+      just
       user="${CI_REGISTRY_USER}"
       password="${CI_REGISTRY_PASSWORD}"
       registry="${CI_REGISTRY}"
       repository="${CI_REGISTRY_IMAGE}"
+      upload "${VERSION}" "${PLATFORM}"
 
 scan:
   image:
