@@ -23,7 +23,7 @@ build version platform: _deps _qemu
     docker buildx build --build-arg version={{version}} --platform {{platform}} --tag {{name}} --cache-to "type=local,dest=.cache/{{platform}}/{{version}}" --load .
     docker buildx rm builder
 
-_login user password registry:
+_login:
     echo "{{password}}" | docker login -u "{{user}}" --password-stdin {{registry}}
 
 _deps:
@@ -52,7 +52,7 @@ _update_readme:
     docker run -v ${PWD}:/workspace -e DOCKERHUB_USERNAME -e DOCKERHUB_PASSWORD -e DOCKERHUB_REPOSITORY -e README_FILEPATH=/workspace/README.md peterevans/dockerhub-description
 
 
-upload version platform: (_login "{{user}}" "{{password}}" "{{registry}}")
+upload version platform: _login
     #!/usr/bin/env sh
     docker buildx build . --push --platform {{platform}} \
         --cache-from "type=local,src=.cache/linux/{{platform}}/{{version}}" \
