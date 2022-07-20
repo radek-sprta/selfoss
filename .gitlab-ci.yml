@@ -39,10 +39,10 @@ build:
     # Upload internally for testing
     - >
       just
-      user="${CI_REGISTRY_USER}"
-      password="${CI_REGISTRY_PASSWORD}"
-      registry="${CI_REGISTRY}"
-      repository="${CI_REGISTRY_IMAGE}"
+      USER="${CI_REGISTRY_USER}"
+      PASSWORD="${CI_REGISTRY_PASSWORD}"
+      REGISTRY="${CI_REGISTRY}"
+      REPOSITORY="${CI_REGISTRY_IMAGE}"
       upload "${VERSION}" "${PLATFORM}"
 
 scan:
