@@ -8,7 +8,7 @@ plugins-dir := "~/.docker/cli-plugins"
 USER := env_var_or_default("DOCKERHUB_USERNAME", "rsprta")
 PASSWORD := env_var_or_default("DOCKERHUB_PASSWORD", "none")
 REGISTRY := "docker.io"
-REPOSITORY := env_var_or_default("DOCKERHUB_REPOSITORY", "{{USER}}/{{name}}")
+REPOSITORY := env_var_or_default("DOCKERHUB_REPOSITORY", USER + "/" + name)
 
 BUILD_DATE := `date -u +'%Y-%m-%dT%H:%M:%SZ'`
 VCS_REF := `git describe --tags --always --dirty`
@@ -23,7 +23,10 @@ build version platform: _deps _qemu
     docker buildx rm builder
 
 _login:
-    echo "{{PASSWORD}}" | docker login -u "{{USER}}" --password-stdin {{REGISTRY}}
+    #!/usr/bin/env sh
+    if ! grep -q {{REGISTRY}} ${HOME}/.docker/config.json; then
+        echo "{{PASSWORD}}" | docker login -u "{{USER}}" --password-stdin {{REGISTRY}}
+    fi
 
 _deps:
     #!/usr/bin/env sh
@@ -48,7 +51,7 @@ test: (build "latest" "linux/amd64") run
     docker stop {{name}}
 
 _update_readme:
-    docker run -v ${PWD}:/workspace \
+    @docker run -v ${PWD}:/workspace \
     -e DOCKERHUB_USERNAME={{USER}} \
     -e DOCKERHUB_PASSWORD={{PASSWORD}} \
     -e DOCKERHUB_REPOSITORY={{REPOSITORY}} \
@@ -61,6 +64,6 @@ upload version platform: _login
         --label "org.opencontainers.image.created=${BUILD_DATE}" \
         --label "org.opencontainers.image.revision=${VCS_REF}" \
         --tag {{REPOSITORY}}:{{version}}
-    if [ "{{REGISTRY}}" == "docker.io"]; then
-        _update_readme
+    if [ "{{REGISTRY}}" = "docker.io" ]; then
+        just _update_readme
     fi
