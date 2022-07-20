@@ -1,5 +1,6 @@
 stages:
   - build
+  - test
   - deploy
 
 services:
@@ -7,7 +8,7 @@ services:
     command: ["--experimental"]
 
 before_script:
-  - apk --no-cache add git just 
+  - apk --no-cache add git just
 
 image: docker:git
 
@@ -35,6 +36,21 @@ build:
     - just build "${VERSION}" "${PLATFORM}"
     - just run
     - docker stop selfoss
+    # Upload internally for testing
+    - >
+      just upload "${VERSION}" "${PLATFORM}"
+      user="${CI_REGISTRY_USER}"
+      password="${CI_REGISTRY_PASSWORD}"
+      registry="${CI_REGISTRY}"
+      repository="${CI_REGISTRY_IMAGE}"
+
+scan:
+  image:
+    name: aquasec/trivy
+    entrypoint: [""]
+  stage: test
+  script:
+    - just scan "${CI_REGISTRY_IMAGE}"
 
 deploy:
   extends:

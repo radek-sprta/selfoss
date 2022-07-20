@@ -5,8 +5,14 @@ buildx-version := "0.8.2"
 name := "selfoss"
 plugins-dir := "~/.docker/cli-plugins"
 
+user := env_var_or_default('DOCKERHUB_USERNAME', 'none')
+password := env_var_or_default('DOCKERHUB_PASSWORD', 'none')
+registry := "docker.io"
+repository := env_var_or_default('DOCKERHUB_REPOSITORY', 'none')
+
 BUILD_DATE := `date -u +'%Y-%m-%dT%H:%M:%SZ'`
 VCS_REF := `git describe --tags --always --dirty`
+
 
 
 defaults:
@@ -17,9 +23,8 @@ build version platform: _deps _qemu
     docker buildx build --build-arg version={{version}} --platform {{platform}} --tag {{name}} --cache-to "type=local,dest=.cache/{{platform}}/{{version}}" --load .
     docker buildx rm builder
 
-_login:
-    echo "${CI_REGISTRY_PASSWORD}" | docker login -u "${CI_REGISTRY_USER}" --password-stdin "${CI_REGISTRY}"
-    echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin docker.io
+_login user password registry:
+    echo "{{password}}" | docker login -u "{{user}}" --password-stdin {{registry}}
 
 _deps:
     #!/usr/bin/env sh
@@ -43,11 +48,17 @@ scan image:
 test: (build "latest" "linux/amd64") run
     docker stop {{name}}
 
-upload version platform: _login
+_update_readme:
+    docker run -v ${PWD}:/workspace -e DOCKERHUB_USERNAME -e DOCKERHUB_PASSWORD -e DOCKERHUB_REPOSITORY -e README_FILEPATH=/workspace/README.md peterevans/dockerhub-description
+
+
+upload version platform: (_login {{user}} {{password}} {{registry}})
+    #!/usr/bin/env sh
     docker buildx build . --push --platform {{platform}} \
         --cache-from "type=local,src=.cache/linux/{{platform}}/{{version}}" \
         --label "org.opencontainers.image.created=${BUILD_DATE}" \
         --label "org.opencontainers.image.revision=${VCS_REF}" \
-        --tag ${CI_REGISTRY_IMAGE}:{{version}} \
-        --tag ${DOCKERHUB_REPOSITORY}:{{version}}
-    docker run -v ${PWD}:/workspace -e DOCKERHUB_USERNAME -e DOCKERHUB_PASSWORD -e DOCKERHUB_REPOSITORY -e README_FILEPATH=/workspace/README.md peterevans/dockerhub-description
+        --tag {{repository}}:{{version}}
+    if [ "{{registry}}" == "docker.io"]; then
+        _update_readme
+    fi
