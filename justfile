@@ -5,10 +5,10 @@ buildx-version := "0.8.2"
 name := "selfoss"
 plugins-dir := "~/.docker/cli-plugins"
 
-user := env_var_or_default("DOCKERHUB_USERNAME", "rsprta")
-password := env_var_or_default("DOCKERHUB_PASSWORD", "none")
-registry := "docker.io"
-repository := env_var_or_default("DOCKERHUB_REPOSITORY", "{{user}}/{{name}}")
+USER := env_var_or_default("DOCKERHUB_USERNAME", "rsprta")
+PASSWORD := env_var_or_default("DOCKERHUB_PASSWORD", "none")
+REGISTRY := "docker.io"
+REPOSITORY := env_var_or_default("DOCKERHUB_REPOSITORY", "{{USER}}/{{name}}")
 
 BUILD_DATE := `date -u +'%Y-%m-%dT%H:%M:%SZ'`
 VCS_REF := `git describe --tags --always --dirty`
@@ -23,7 +23,7 @@ build version platform: _deps _qemu
     docker buildx rm builder
 
 _login:
-    echo "{{password}}" | docker login -u "{{user}}" --password-stdin {{registry}}
+    echo "{{PASSWORD}}" | docker login -u "{{USER}}" --password-stdin {{REGISTRY}}
 
 _deps:
     #!/usr/bin/env sh
@@ -48,8 +48,11 @@ test: (build "latest" "linux/amd64") run
     docker stop {{name}}
 
 _update_readme:
-    docker run -v ${PWD}:/workspace -e DOCKERHUB_USERNAME -e DOCKERHUB_PASSWORD -e DOCKERHUB_REPOSITORY -e README_FILEPATH=/workspace/README.md peterevans/dockerhub-description
-
+    docker run -v ${PWD}:/workspace \
+    -e DOCKERHUB_USERNAME={{USER}} \
+    -e DOCKERHUB_PASSWORD={{PASSWORD}} \
+    -e DOCKERHUB_REPOSITORY={{REPOSITORY}} \
+    -e README_FILEPATH=/workspace/README.md peterevans/dockerhub-description
 
 upload version platform: _login
     #!/usr/bin/env sh
@@ -57,7 +60,7 @@ upload version platform: _login
         --cache-from "type=local,src=.cache/linux/{{platform}}/{{version}}" \
         --label "org.opencontainers.image.created=${BUILD_DATE}" \
         --label "org.opencontainers.image.revision=${VCS_REF}" \
-        --tag {{repository}}:{{version}}
-    if [ "{{registry}}" == "docker.io"]; then
+        --tag {{REPOSITORY}}:{{version}}
+    if [ "{{REGISTRY}}" == "docker.io"]; then
         _update_readme
     fi
