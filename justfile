@@ -5,14 +5,13 @@ buildx-version := "0.8.2"
 name := "selfoss"
 plugins-dir := "~/.docker/cli-plugins"
 
-user := env_var_or_default('DOCKERHUB_USERNAME', 'none')
-password := env_var_or_default('DOCKERHUB_PASSWORD', 'none')
+user := env_var_or_default("DOCKERHUB_USERNAME", "rsprta")
+password := env_var_or_default("DOCKERHUB_PASSWORD", "none")
 registry := "docker.io"
-repository := env_var_or_default('DOCKERHUB_REPOSITORY', 'none')
+repository := env_var_or_default("DOCKERHUB_REPOSITORY", "{{user}}/{{name}}")
 
 export BUILD_DATE := `date -u +'%Y-%m-%dT%H:%M:%SZ'`
 export VCS_REF := `git describe --tags --always --dirty`
-
 
 
 defaults:
