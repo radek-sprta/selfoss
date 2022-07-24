@@ -31,17 +31,15 @@ build:
     - .matrix
   stage: build
   script:
-    - just build "${VERSION}" "${PLATFORMS}"
-    - just run
-    - docker stop selfoss
-    # Upload internally for testing
     - >
       just
       USER="${CI_REGISTRY_USER}"
       PASSWORD="${CI_REGISTRY_PASSWORD}"
       REGISTRY="${CI_REGISTRY}"
       REPOSITORY="${CI_REGISTRY_IMAGE}"
-      upload "${VERSION}" "${PLATFORMS}"
+      build "${VERSION}" "${PLATFORMS}"
+    - just run
+    - docker stop selfoss
 
 scan:
   dependencies: []
