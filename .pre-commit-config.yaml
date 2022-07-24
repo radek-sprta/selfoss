@@ -5,6 +5,14 @@ repos:
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.14
+    hooks:
+      - id: mdformat
+  - repo: https://gitlab.com/devopshq/gitlab-ci-linter
+    rev: v1.0.3
+    hooks:
+      - id: gitlab-ci-linter
   - repo: https://github.com/pryorda/dockerfilelint-precommit-hooks
     rev: v0.1.0
     hooks:
