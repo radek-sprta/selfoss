@@ -23,9 +23,8 @@ build version platforms: _deps _qemu
         --build-arg version={{version}} \
         --platform {{platforms}} \
         --tag {{name}} \
-        --cache-from {{name}} \
+        --cache-from {{REPOSITORY}} \
         --cache-to "type=inline" \
-        --push \
         .
     docker buildx rm builder
 
@@ -67,7 +66,7 @@ _update_readme:
 upload version platforms: _login
     #!/usr/bin/env sh
     docker buildx build . --push --platform {{platforms}} \
-        --cache-from "type=local,src=.cache/linux/{{platforms}}/{{version}}" \
+        --cache-from "{{REPOSITORY}}" \
         --label "org.opencontainers.image.created=${BUILD_DATE}" \
         --label "org.opencontainers.image.revision=${VCS_REF}" \
         --tag {{REPOSITORY}}:{{version}}
