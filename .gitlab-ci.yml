@@ -23,10 +23,6 @@ variables:
           - "latest"
 
 build:
-  artifacts:
-    paths:
-      - .cache
-    expire_in: 1 hour
   extends:
     - .matrix
   stage: build
@@ -42,7 +38,6 @@ build:
       upload "${VERSION}" "${PLATFORMS}"
 
 scan:
-  dependencies: []
   image:
     name: aquasec/trivy
     entrypoint: [""]
