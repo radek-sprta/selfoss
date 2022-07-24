@@ -17,9 +17,16 @@ VCS_REF := `git describe --tags --always --dirty`
 defaults:
     @just --list
 
-build version platform: _deps _qemu
+build version platforms: _deps _qemu
     docker buildx create --use --driver docker-container --name builder
-    docker buildx build --build-arg version={{version}} --platform {{platform}} --tag {{name}} --cache-to "type=local,dest=.cache/{{platform}}/{{version}}" --load .
+    docker buildx build \
+        --build-arg \version={{version}} \
+        --platform {{platforms}} \
+        --tag {{name}}\
+        --cache-from {{name}} \
+        --cache-to "type=inline" \
+        --load \
+        .
     docker buildx rm builder
 
 _login:
@@ -57,10 +64,10 @@ _update_readme:
     -e DOCKERHUB_REPOSITORY={{REPOSITORY}} \
     -e README_FILEPATH=/workspace/README.md peterevans/dockerhub-description
 
-upload version platform: _login
+upload version platforms: _login
     #!/usr/bin/env sh
-    docker buildx build . --push --platform {{platform}} \
-        --cache-from "type=local,src=.cache/linux/{{platform}}/{{version}}" \
+    docker buildx build . --push --platform {{platforms}} \
+        --cache-from "type=local,src=.cache/linux/{{platforms}}/{{version}}" \
         --label "org.opencontainers.image.created=${BUILD_DATE}" \
         --label "org.opencontainers.image.revision=${VCS_REF}" \
         --tag {{REPOSITORY}}:{{version}}

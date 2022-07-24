@@ -12,14 +12,12 @@ before_script:
 
 image: docker:git
 
+variables:
+  PLATFORMS: "linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6"
+
 .matrix:
   parallel:
     matrix:
-      - PLATFORM:
-          - "linux/amd64"
-          - "linux/arm64"
-          - "linux/arm/v7"
-          - "linux/arm/v6"
         VERSION:
           - "2.18"
           - "latest"
@@ -33,7 +31,7 @@ build:
     - .matrix
   stage: build
   script:
-    - just build "${VERSION}" "${PLATFORM}"
+    - just build "${VERSION}" "${PLATFORMS}"
     - just run
     - docker stop selfoss
     # Upload internally for testing
@@ -43,7 +41,7 @@ build:
       PASSWORD="${CI_REGISTRY_PASSWORD}"
       REGISTRY="${CI_REGISTRY}"
       REPOSITORY="${CI_REGISTRY_IMAGE}"
-      upload "${VERSION}" "${PLATFORM}"
+      upload "${VERSION}" "${PLATFORMS}"
 
 scan:
   dependencies: []
@@ -62,4 +60,4 @@ deploy:
   retry: 1
   stage: deploy
   script:
-    - just upload "${VERSION}" "${PLATFORM}"
+    - just upload "${VERSION}" "${PLATFORMS}"
