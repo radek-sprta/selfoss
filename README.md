@@ -3,6 +3,7 @@
 ![selfoss](https://i.imgur.com/8hJyBgk.png "selfoss")
 
 ## Quick reference
+
 - **Maintained by**: [Radek Sprta](https://gitlab.com/radek-sprta)
 - **Where to get help**: [Repository Issues](https://gitlab.com/radek-sprta/docker-selfoss/-/issues)
 
@@ -25,7 +26,6 @@ A multipurpose RSS reader, live stream, mashup, aggregation web application.
 
 ### Runtime variables
 
-
 ### Ports
 
 - 8888
@@ -43,6 +43,7 @@ A multipurpose RSS reader, live stream, mashup, aggregation web application.
 | **SELFOSS_CONFIG_FILE** | Custom config.ini location | *optional* | /selfoss/defaults.ini
 
 ## Usage
+
 The simplest way to run the container is the following command:
 
 ```bash
@@ -63,12 +64,14 @@ services:
 ```
 
 ## Contact
+
 - [mail@radeksprta.eu](mailto:mail@radeksprta.eu)
 - [incoming+radek-sprta/docker-selfoss@gitlab.com](incoming+radek-sprta/docker-selfoss@gitlab.com)
 
 ## Credits
+
 The image is forked from [hardware/selfoss](https://github.com/hardware/selfoss).
 
-This package was created with [Cookiecutter][cookiecutter] from [cookiecutter-docker-multiarch](https://gitlab.com/radek-sprta/cookiecutter-docker-multiarch).
+This package was created with [Cookiecutter] from [cookiecutter-docker-multiarch](https://gitlab.com/radek-sprta/cookiecutter-docker-multiarch).
 
 [cookiecutter]: https://github.com/audreyr/cookiecutter
