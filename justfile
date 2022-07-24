@@ -66,7 +66,7 @@ _update_readme:
     -e DOCKERHUB_REPOSITORY={{REPOSITORY}} \
     -e README_FILEPATH=/workspace/README.md peterevans/dockerhub-description
 
-upload version platforms: _login (build "{{version}}" "{{platforms}}")
+upload version platforms: _login (build {{version}} {{platforms}})
     #!/usr/bin/env sh
     if [ "{{REGISTRY}}" = "docker.io" ]; then
         just _update_readme
