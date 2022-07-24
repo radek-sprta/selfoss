@@ -22,7 +22,7 @@ build version platforms: _deps _qemu
     docker buildx build \
         --build-arg version={{version}} \
         --platform {{platforms}} \
-        --tag {{name}}\
+        --tag {{name}} \
         --cache-from {{name}} \
         --cache-to "type=inline" \
         --load \
