@@ -51,6 +51,9 @@ _deps:
         chmod a+x {{plugins-dir}}/docker-buildx
     fi
 
+prune:
+    docker system prune --all --volumes
+
 _qemu:
     docker run --privileged multiarch/qemu-user-static --reset -p yes
 
