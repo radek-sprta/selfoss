@@ -27,7 +27,7 @@ build version platforms: _deps _qemu
         --label "org.opencontainers.image.revision=${VCS_REF}" \
         --platform {{platforms}} \
         --push \
-        --tag {{REPOSITORY}}:{{version}}
+        --tag {{REPOSITORY}}:{{version}} \
         .
     docker buildx rm builder
 
