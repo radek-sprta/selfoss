@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.4
 FROM alpine:3.15
 
 LABEL maintainer="Radek Sprta <mail@radeksprta.eu>"
