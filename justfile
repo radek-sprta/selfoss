@@ -25,7 +25,7 @@ build version platforms: _deps _qemu
         --tag {{name}} \
         --cache-from {{name}} \
         --cache-to "type=inline" \
-        --load \
+        --push \
         .
     docker buildx rm builder
 
