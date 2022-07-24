@@ -48,7 +48,7 @@ RUN apk upgrade --no-cache \
  && sed -i -e 's/base_url=/base_url=\//g' /selfoss/defaults.ini \
  && rm -rf /tmp/*
 
-COPY rootfs /
+COPY --link rootfs /
 RUN chmod +x /usr/local/bin/run.sh /services/*/run /services/.s6-svscan/*
 VOLUME /selfoss/data
 EXPOSE 8888
