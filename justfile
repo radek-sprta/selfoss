@@ -20,7 +20,7 @@ defaults:
 build version platforms: _deps _qemu
     docker buildx create --use --driver docker-container --name builder
     docker buildx build \
-        --build-arg \version={{version}} \
+        --build-arg version={{version}} \
         --platform {{platforms}} \
         --tag {{name}}\
         --cache-from {{name}} \
