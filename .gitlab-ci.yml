@@ -46,6 +46,7 @@ build:
       upload "${VERSION}" "${PLATFORM}"
 
 scan:
+  dependencies: []
   image:
     name: aquasec/trivy
     entrypoint: [""]
