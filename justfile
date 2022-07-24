@@ -17,7 +17,12 @@ VCS_REF := `git describe --tags --always --dirty`
 defaults:
     @just --list
 
-build version platforms: _deps _qemu
+build version platforms type="remote": _deps _qemu
+    #!/usr/bin/env sh
+    build="push"
+    if [ "{{type}}" = "local" ]; then
+        build="load"
+    fi
     docker buildx create --use --driver docker-container --name builder
     docker buildx build \
         --build-arg version={{version}} \
@@ -26,8 +31,9 @@ build version platforms: _deps _qemu
         --label "org.opencontainers.image.created=${BUILD_DATE}" \
         --label "org.opencontainers.image.revision=${VCS_REF}" \
         --platform {{platforms}} \
-        --push \
+        --${build} \
         --tag {{REPOSITORY}}:{{version}} \
+        --tag {{REPOSITORY}} \
         .
     docker buildx rm builder
 
@@ -49,14 +55,14 @@ _qemu:
     docker run --privileged multiarch/qemu-user-static --reset -p yes
 
 run:
-    docker run --rm -d --name {{name}} {{name}}
+    docker run --rm -d --name {{name}} {{REPOSITORY}}
 
 scan image:
     trivy image --ignore-unfixed --severity MEDIUM,HIGH,CRITICAL \
     --exit-code 1 --no-progress --security-checks vuln \
     {{image}}
 
-test: (build "latest" "linux/amd64") run
+test: (build "latest" "linux/amd64" "local") run
     docker stop {{name}}
 
 _update_readme:

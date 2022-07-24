@@ -27,8 +27,9 @@ build:
     - .matrix
   stage: build
   script:
-#   - just run
-#   - docker stop selfoss
+    - just build "${VERSION}" "linux/amd64" "local"
+    - just run
+    - docker stop selfoss
     - >
       just
       USER="${CI_REGISTRY_USER}"
