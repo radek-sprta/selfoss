@@ -21,10 +21,13 @@ build version platforms: _deps _qemu
     docker buildx create --use --driver docker-container --name builder
     docker buildx build \
         --build-arg version={{version}} \
-        --platform {{platforms}} \
-        --tag {{name}} \
         --cache-from {{REPOSITORY}} \
         --cache-to "type=inline" \
+        --label "org.opencontainers.image.created=${BUILD_DATE}" \
+        --label "org.opencontainers.image.revision=${VCS_REF}" \
+        --platform {{platforms}} \
+        --push \
+        --tag {{REPOSITORY}}:{{version}}
         .
     docker buildx rm builder
 
@@ -63,13 +66,8 @@ _update_readme:
     -e DOCKERHUB_REPOSITORY={{REPOSITORY}} \
     -e README_FILEPATH=/workspace/README.md peterevans/dockerhub-description
 
-upload version platforms: _login
+upload version platforms: _login (_build "{{version}}" "{{platforms}}")
     #!/usr/bin/env sh
-    docker buildx build . --push --platform {{platforms}} \
-        --cache-from "{{REPOSITORY}}" \
-        --label "org.opencontainers.image.created=${BUILD_DATE}" \
-        --label "org.opencontainers.image.revision=${VCS_REF}" \
-        --tag {{REPOSITORY}}:{{version}}
     if [ "{{REGISTRY}}" = "docker.io" ]; then
         just _update_readme
     fi
